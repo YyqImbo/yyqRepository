@@ -1,4 +1,6 @@
-package com.yyq;
+package com.yyq.homework_1;
+
+import com.yyq.homework_1.ISay;
 
 public class Person {
 

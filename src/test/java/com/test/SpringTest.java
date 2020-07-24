@@ -1,6 +1,6 @@
 package com.test;
 
-import com.yyq.Person;
+import com.yyq.homework_1.Person;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +17,6 @@ public class SpringTest {
     @Test
     public void Test(){
         person.getSay().say();
+
     }
 }

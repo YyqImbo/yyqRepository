@@ -1,28 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/cache"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:ctx="http://www.springframework.org/schema/context"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="chinesesay" class="com.yyq.ChineseSay"></bean>
+    <context:annotation-config />
+    <context:component-scan base-package="com.*"></context:component-scan>
 
-    <bean id="englishsay" class="com.yyq.EnglishSay"></bean>
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
 
-    <bean id="person" class="com.yyq.Person">
-<!--        <property name="say" ref="chinesesay"></property>-->
-        <property name="say" ref="englishsay"></property>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="defaultAutoCommit" value="${jdbc.defaultAutoCommit}"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"></property>
     </bean>
 
-    <bean id="MyAdvice" class="com.yyq.MyAdvice">
-        <property name="number" value="28211"></property>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:/SqlMapConfig.xml"></property>
+        <property name="mapperLocations" value="classpath*:com/yyq/dao/*Mapper.xml"></property>
     </bean>
 
-    <aop:config>
-        <aop:pointcut id="myPc" expression="execution(* com.yyq.*.say(..))"/>
-        <aop:aspect id="myAspect" ref="MyAdvice">
-            <aop:before method="before" pointcut-ref="myPc"></aop:before>
-            <aop:after method="after" pointcut-ref="myPc"></aop:after>
-        </aop:aspect>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+    </bean>
 
-    </aop:config>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.yyq.dao"></property>
+    </bean>
+
+
+<!--    <bean id="chinesesay" class="com.yyq.homework_1.ChineseSay"></bean>-->
+
+<!--    <bean id="englishsay" class="com.yyq.homework_1.EnglishSay"></bean>-->
+
+<!--    <bean id="person" class="com.yyq.homework_1.Person">-->
+<!--&lt;!&ndash;        <property name="say" ref="chinesesay"></property>&ndash;&gt;-->
+<!--        <property name="say" ref="englishsay"></property>-->
+<!--    </bean>-->
+
+<!--    <bean id="MyAdvice" class="com.yyq.homework_1.MyAdvice">-->
+<!--        <property name="number" value="28211"></property>-->
+<!--    </bean>-->
+
+<!--    <aop:aspectj-autoproxy/>-->
+<!--    <ctx:annotation-config />-->
+<!--    <ctx:component-scan base-package = "com.yyq" />-->
+
+<!--    <aop:config>-->
+<!--        <aop:pointcut id="myPc" expression="execution(* com.yyq.*.say(..))"/>-->
+<!--        <aop:aspect id="myAspect" ref="MyAdvice">-->
+<!--            <aop:before method="before" pointcut-ref="myPc"></aop:before>-->
+<!--            <aop:after method="after" pointcut-ref="myPc"></aop:after>-->
+<!--        </aop:aspect>-->
+<!--    </aop:config>-->
+
+
+
 </beans>

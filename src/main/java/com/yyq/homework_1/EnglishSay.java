@@ -1,4 +1,4 @@
-package com.yyq;
+package com.yyq.homework_1;
 
 public class EnglishSay implements ISay {
     public void say() {

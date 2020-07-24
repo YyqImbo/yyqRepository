@@ -1,4 +1,4 @@
-package com.yyq;
+package com.yyq.homework_1;
 
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,7 +19,7 @@ public class MyAdvice {
     }
 
     @Pointcut(value = "execution(* com.yyq.*.say(..))")
-    private void method(){};
+    private void method(){}
 
     @Before("method()")
     public void before(){

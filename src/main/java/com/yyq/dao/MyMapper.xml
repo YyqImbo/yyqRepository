@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyq.dao.MyDao">
+    <resultMap id="orderLineQueryResult" type="com.yyq.dao.bean.OrderLineQueryResult">
+        <result property="orderNumber" column="order_number" jdbcType="VARCHAR" ></result>
+        <result property="userName" column="user_name" jdbcType="VARCHAR" ></result>
+        <result property="address" column="address" jdbcType="VARCHAR" ></result>
+        <result property="remark" column="remark" jdbcType="VARCHAR" ></result>
+        <result property="createdByName" column="created_by_name" jdbcType="VARCHAR" ></result>
+        <result property="orderLineNumber" column="order_line_number" jdbcType="INTEGER" ></result>
+        <result property="itemCode" column="item_code" jdbcType="VARCHAR" ></result>
+        <result property="itemName" column="item_name" jdbcType="VARCHAR" ></result>
+        <result property="unitPrice" column="unit_price" jdbcType="DECIMAL" ></result>
+        <result property="quantity" column="quantity" jdbcType="DECIMAL" ></result>
+        <result property="lineAmount" column="line_amount" jdbcType="DECIMAL" ></result>
+    </resultMap>
+    <select id="selectOrderLinesByCondition" parameterType="com.yyq.dao.bean.OrderLineQueryCondition" resultMap="orderLineQueryResult">
+        SELECT
+            oh.order_number AS order_number,
+            su.user_name AS user_name,
+            su.address AS address,
+            oh.remark AS remark,
+            su2.user_name AS created_by_name,
+            ol.order_line_number AS order_line_number,
+            ol.item_code AS item_code,
+            ol.item_name AS item_name,
+            ol.unit_price AS unit_price,
+            ol.quantity AS quantity,
+            ol.line_amount AS line_amount
+        FROM order_line ol
+            LEFT JOIN order_header oh ON ol.order_header_id = oh.order_header_id
+            LEFT JOIN sys_user su ON oh.customer_user_id = su.user_id
+            LEFT JOIN sys_user su2 ON ol.created_by = su2.user_id
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="orderNumber != null">
+                AND oh.order_number LIKE CONCAT('%', #{orderNumber}, '%')
+            </if>
+            <if test="orderLineNumber != null">
+                AND ol.order_line_number = #{orderLineNumber}
+            </if>
+            <if test="itemCode != null">
+                AND ol.item_code LIKE CONCAT('%', #{itemCode}, '%')
+            </if>
+            <if test="itemName != null">
+                AND ol.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="createdBy != null">
+                AND ol.created_by = #{createdBy}
+            </if>
+            <if test="customerUserId != null">
+                AND oh.customer_user_id = #{customerUserId}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertUser" parameterType="com.yyq.dao.bean.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userNumber != null">
+                user_number,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="objectVersionNumber != null">
+                object_version_number,
+            </if>
+            <if test="creationDate != null">
+                creation_date,
+            </if>
+            <if test="createdBy != null">
+                created_by,
+            </if>
+            <if test="lastUpdateDate != null">
+                last_update_date,
+            </if>
+            <if test="lastUpdatedBy != null">
+                last_updated_by,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userNumber != null">
+                #{userNumber},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="objectVersionNumber != null">
+                #{objectVersionNumber},
+            </if>
+            <if test="creationDate != null">
+                #{creationDate},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy},
+            </if>
+            <if test="lastUpdateDate != null">
+                #{lastUpdateDate},
+            </if>
+            <if test="lastUpdatedBy != null">
+                #{lastUpdatedBy},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="com.yyq.dao.bean.User">
+        UPDATE sys_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userNumber != null">
+                user_number = #{userNumber},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="objectVersionNumber != null">
+                object_version_number = #{objectVersionNumber},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy},
+            </if>
+            <if test="lastUpdateDate != null">
+                last_update_date = #{lastUpdateDate},
+            </if>
+            <if test="lastUpdatedBy != null">
+                last_update_by = #{lastUpdatedBy},
+            </if>
+        </trim>
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUser">
+        DELETE
+        FROM sys_user
+        WHERE user_id = #{userId}
+    </delete>
+</mapper>

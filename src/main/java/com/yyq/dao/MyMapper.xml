@@ -70,15 +70,11 @@
             <if test="objectVersionNumber != null">
                 object_version_number,
             </if>
-            <if test="creationDate != null">
-                creation_date,
-            </if>
+            creation_date,
             <if test="createdBy != null">
                 created_by,
             </if>
-            <if test="lastUpdateDate != null">
-                last_update_date,
-            </if>
+             last_update_date,
             <if test="lastUpdatedBy != null">
                 last_updated_by,
             </if>
@@ -97,15 +93,11 @@
             <if test="objectVersionNumber != null">
                 #{objectVersionNumber},
             </if>
-            <if test="creationDate != null">
-                #{creationDate},
-            </if>
+            creation_date = NOW(),
             <if test="createdBy != null">
                 #{createdBy},
             </if>
-            <if test="lastUpdateDate != null">
-                #{lastUpdateDate},
-            </if>
+            last_update_date = NOW(),
             <if test="lastUpdatedBy != null">
                 #{lastUpdatedBy},
             </if>
@@ -127,18 +119,10 @@
             <if test="objectVersionNumber != null">
                 object_version_number = #{objectVersionNumber},
             </if>
-            <if test="creationDate != null">
-                creation_date = #{creationDate},
-            </if>
-            <if test="createdBy != null">
-                created_by = #{createdBy},
-            </if>
-            <if test="lastUpdateDate != null">
-                last_update_date = #{lastUpdateDate},
-            </if>
             <if test="lastUpdatedBy != null">
                 last_update_by = #{lastUpdatedBy},
             </if>
+            last_update_date = NOW(),
         </trim>
         WHERE user_id = #{userId}
     </update>
